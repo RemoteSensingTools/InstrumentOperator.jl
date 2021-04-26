@@ -62,3 +62,22 @@ function create_instrument_kernel(FTS::FTSInstrument, grid_x::AbstractRange, ν�
     sinc_kernel /= sum(sinc_kernel)
     return imfilter(box_kernel,sinc_kernel)
 end
+
+"Create kernel from a single continous distribution function"
+function create_instrument_kernel(di::ContinuousUnivariateDistribution, grid_x::AbstractRange)
+    ils = pdf.(di,grid_x)
+    i₀ = argmin(abs.(grid_x))
+    axis_pixel = (-i₀ + 1):(grid_x.len - i₀)
+    return OffsetArray(ils,axis_pixel)
+end
+
+"Create kernel from multiple single continous distribution function (convolves those)"
+function create_instrument_kernel(di::Array{ContinuousUnivariateDistribution}, grid_x::AbstractRange)
+    ils = pdf.(di[1],grid_x)
+    for i=2:length(di)
+        ils = imfilter(ils, pdf.(di[i],grid_x))
+    end
+    i₀ = argmin(abs.(grid_x))
+    axis_pixel = (-i₀ + 1):(grid_x.len - i₀)
+    return OffsetArray(ils,axis_pixel)
+end
