@@ -73,9 +73,10 @@ function create_instrument_kernel(di::ContinuousUnivariateDistribution, grid_x::
 end
 
 "Create kernel from multiple single continous distribution function (convolves those)"
-function create_instrument_kernel(di::Array{ContinuousUnivariateDistribution}, grid_x::AbstractRange)
+function create_instrument_kernel(di::Array{T}, grid_x::AbstractRange) where T <: ContinuousUnivariateDistribution
     ils = pdf.(di[1],grid_x)
     for i=2:length(di)
+        # might change this in future to just do multiplications in fft space and then ifft back
         ils = imfilter(ils, pdf.(di[i],grid_x))
     end
     i₀ = argmin(abs.(grid_x))
