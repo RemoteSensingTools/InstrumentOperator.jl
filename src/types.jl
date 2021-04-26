@@ -3,16 +3,16 @@
 #####
 
 """
-    type InstrumentOperator
-Abstract InstrumentOperator type 
+    type AbstractInstrumentOperator
+Abstract AbstractInstrumentOperator type 
 """
-abstract type InstrumentOperator end
+abstract type AbstractInstrumentOperator end
 
 """
-    type Instrument
+    type AbstractInstrument
 Abstract Instrument type 
 """
-abstract type Instrument end
+abstract type AbstractInstrument end
 
 """
     struct FixedKernelInstrument{FT}
@@ -22,7 +22,7 @@ A struct which provides all parameters for the convolution with a kernel, which 
 # Fields
 $(DocStringExtensions.FIELDS)
 """
-struct FixedKernelInstrument{FT} <: InstrumentOperator
+struct FixedKernelInstrument{FT} <: AbstractInstrumentOperator
     "convolution Kernel" 
     kernel::OffsetArray{FT,1}
     "Output spectral grid"
@@ -37,7 +37,7 @@ end;
 # Fields
 $(DocStringExtensions.FIELDS)
 """
-struct VariableKernelInstrument{FT,AA} <: InstrumentOperator
+struct VariableKernelInstrument{FT,AA} <: AbstractInstrumentOperator
     "convolution Kernel" 
     kernel::OffsetArray{FT,2,AA}
     "Output spectral grid"
@@ -46,7 +46,7 @@ struct VariableKernelInstrument{FT,AA} <: InstrumentOperator
     ind_out::Array{Int,1}
 end;
 
-struct FTSInstrument{FT} <: Instrument
+struct FTSInstrument{FT} <: AbstractInstrument
     "Maximum Optical Path Difference (cm)"
     MOPD::FT
     "Field of View (rad)"

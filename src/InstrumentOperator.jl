@@ -3,6 +3,8 @@ using OffsetArrays
 using Polynomials
 using NCDatasets
 using Interpolations
+using Parameters
+using DocStringExtensions
 # using DataInterpolations
 
 include("types.jl")                # All types used in this module
