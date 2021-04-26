@@ -68,6 +68,7 @@ function create_instrument_kernel(di::ContinuousUnivariateDistribution, grid_x::
     ils = pdf.(di,grid_x)
     i₀ = argmin(abs.(grid_x))
     axis_pixel = (-i₀ + 1):(grid_x.len - i₀)
+    ils /= sum(ils)
     return OffsetArray(ils,axis_pixel)
 end
 
@@ -79,5 +80,6 @@ function create_instrument_kernel(di::Array{ContinuousUnivariateDistribution}, g
     end
     i₀ = argmin(abs.(grid_x))
     axis_pixel = (-i₀ + 1):(grid_x.len - i₀)
+    ils /= sum(ils)
     return OffsetArray(ils,axis_pixel)
 end
