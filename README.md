@@ -25,3 +25,14 @@ FTSkernel = create_instrument_kernel(FTS, x,13000.0)
 plot(x, FTSkernel.parent,label="FTS lineshape",lw=2)
 ```
 ![FTS_ils](https://user-images.githubusercontent.com/10467190/115968929-07cdd100-a4ef-11eb-839b-f22918743828.png)
+
+We can also use Julia's `Distributions` package and create custom kernels with Continous distributions and convolutions thereof, e.g. an AVIRIS-NG like ILS (5nm pixels):
+```julia
+# Define a range for the ILS (resolution always has to be the same as your high resolution spectrum you want to convolve!).
+x = -15:0.01:15
+# Create a custom kernel using two Distributions, convolution of box and Gaussian (e.g. pixel width as box, smoothed by Gaussian)
+avNGkernel = create_instrument_kernel([Normal(0, 1),Uniform(-2.5,2.5)], x)
+![AV_ils](https://user-images.githubusercontent.com/10467190/116157489-ec56f780-a6a1-11eb-9048-8b6938fec69f.png)
+
+
+
