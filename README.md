@@ -32,6 +32,7 @@ We can also use Julia's `Distributions` package and create custom kernels with C
 x = -15:0.01:15
 # Create a custom kernel using two Distributions, convolution of box and Gaussian (e.g. pixel width as box, smoothed by Gaussian)
 avNGkernel = create_instrument_kernel([Normal(0, 1),Uniform(-2.5,2.5)], x)
+```
 ![AV_ils](https://user-images.githubusercontent.com/10467190/116157489-ec56f780-a6a1-11eb-9048-8b6938fec69f.png)
 
 
