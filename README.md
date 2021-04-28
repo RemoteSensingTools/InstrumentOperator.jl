@@ -1,7 +1,7 @@
 [![dev][docs-latest-img]][docs-latest-url] 
 
 [docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
-[docs-latest-url]: https://radiativetransfer.github.io/InstrumentOperator.jl/
+[docs-latest-url]: https://radiativetransfer.github.io/InstrumentOperator.jl/dev
 
 
 
