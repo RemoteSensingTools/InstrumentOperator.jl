@@ -23,3 +23,12 @@ From the Julia REPL, type `]` to enter the Pkg REPL mode and run
 ```julia
 pkg> add https://github.com/RadiativeTransfer/InstrumentOperator.jl
 ```
+
+## Some docs
+```@docs
+create_instrument_kernel
+conv_spectra
+prepare_ils_table
+FixedKernelInstrument
+VariableKernelInstrument
+```
