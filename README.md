@@ -1,3 +1,9 @@
+[![dev][docs-latest-img]][docs-latest-url] 
+
+[docs-latest-img]: https://img.shields.io/badge/docs-latest-blue.svg
+[docs-latest-url]: https://radiativetransfer.github.io/InstrumentOperator.jl/
+
+
 # InstrumentOperator.jl
 Collection of instrument line-shape methods for hyperspectral remote sensing. Basic objective is to provide composable routines to apply a variety of instrument line-shapes (ILS) for the convolution and resampling of high resolution modeled radiance with an instrument operator. At the moment, we have FTS systems (sinc function convolved with assymetric box), spectrally varying lookup tables as for the Orbiting Carbon Observatory and generic distribution functions (e.g. Gaussian) as instrument kernels. 
 

@@ -1,10 +1,12 @@
-"Convolve and resample"
+
+"Convolves and resamples the input spectrum with a fixed kernel"
 function conv_spectra(m::FixedKernelInstrument, ν, spectrum)
     s = imfilter(spectrum, m.kernel)
     interp_cubic = CubicSplineInterpolation(ν, s)
     return interp_cubic(m.ν_out)
 end;
 
+"Convolves and resamples the input spectrum with a variable kernel (per spectral position)"
 function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     FT = eltype(m.ν_out)
     # Define grid where to perform convolution:
