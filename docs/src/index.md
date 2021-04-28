@@ -9,7 +9,11 @@ and the necessary interpolation from the high resolution (hr) grid to the low re
 ```math
 (R*ILS)(\lambda_{hr}) \xrightarrow{\text{Cubic Spline}} (R*ILS)(\lambda_{lr})
 ```
-To simplify calculations, we require the high resolution grid to be equidistant, ideally defined as Range.  
+To simplify calculations, we require the high resolution grid to be equidistant, ideally defined as Range. The ILS kernel (implemented as `OffsetArray`) and the grid in `R` thus require the same spacing, as we implement the convolution using finite response functions over indices in both ILS and R:
+
+```math
+(R*ILS)(\lambda_i})=\sum_{m=-M}^{M}R[\lambda_i-m]ILS[m]
+```
 
 ## Installation
 
