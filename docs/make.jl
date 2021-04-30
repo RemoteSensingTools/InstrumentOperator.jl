@@ -2,7 +2,10 @@ push!(LOAD_PATH,joinpath(@__DIR__, "../src"))
 
 using Documenter, InstrumentOperator, Literate, Plots
 using DocumenterTools: Themes
-
+using Pkg
+Pkg.add(url="https://github.com/RadiativeTransfer/Architectures.jl")
+Pkg.add(url="https://github.com/RadiativeTransfer/Absorption.jl")
+push!(LOAD_PATH,"./src/")
 
 function build()
 
