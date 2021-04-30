@@ -1,7 +1,10 @@
 [deps]
+Absorption = "6ba05578-04e7-47be-9b1b-f987dee72b79"
+Architectures = "041f8dc4-33a5-4202-8fb9-ad8f84d1e855"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 ImageFiltering = "6a3955dd-da59-5b1f-98d4-e7296123deb5"
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
