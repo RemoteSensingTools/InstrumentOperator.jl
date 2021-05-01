@@ -334,7 +334,7 @@ a {
     color: #e15e14; }
 
 code {
-  background-color: #a9acb0;
+  background-color: #EEEEEE;
   color: #000000;
   font-size: 0.875em;
   font-weight: normal;
@@ -371,7 +371,7 @@ fieldset {
 
 pre {
   -webkit-overflow-scrolling: touch;
-  background-color: #a9acb0;
+  background-color: #EEEEEE;
   color: #202020;
   font-size: 0.875em;
   overflow-x: auto;
@@ -7197,9 +7197,9 @@ h1:hover .docs-heading-anchor-permalink, h2:hover .docs-heading-anchor-permalink
   color: #202020;
   padding: 1em 1.25em; }
   .admonition-body pre {
-    background-color: #a9acb0; }
+    background-color: #EEEEEE; }
   .admonition-body code {
-    background-color: #a9acb0; }
+    background-color: #EEEEEE; }
 
 .docstring {
   margin-bottom: 1em;
