@@ -11,21 +11,18 @@ end
 
 "Compute photons converted to electrons at the FPA"
 function photons_at_fpa(ins, λ, radiance)
-    @unpack integration_time, SSI, FPA_qe, grating_efficiency, effTransmission = ins
+    @unpack t_int, Δλ, Qₑ, η = ins
     # Common unit:
-    luminosity = uconvert.(u"J/s/μm^2/sr/μm",radiance)
-    total_efficiency = FPA_qe * grating_efficiency * effTransmission
-    energy = luminosity * etendue(ins) * integration_time * SSI * total_efficiency
+    #luminosity = uconvert.(u"J/s/μm^2/sr/μm",radiance)
+    energy = radiance * etendue(ins) * t_int * Δλ * Qₑ * η
     uconvert.(u"nm^-1", energy, Spectral()) .* λ
 end
 
 function noise_at_fpa(ins, photons)
-    @unpack integration_time, dark_current, readNoise = ins
-    total_electrons = photons .+ dark_current .* integration_time
-    # shot noise, variance = electrons
-    shot_noise_variance = total_electrons
+    @unpack t_int, dark_current, σ_read = ins
+    total_electrons = photons .+ dark_current .* t_int
     # Sum variances; Can add more noise terms here later if needed!
-    total_variance = shot_noise_variance .+ readNoise^2
+    total_variance = total_electrons .+ σ_read^2 
     # Return 1-σ noise level
     sqrt.(total_variance)
 end

@@ -71,33 +71,31 @@ $(DocStringExtensions.FIELDS)
 """
 Base.@kwdef  struct GratingNoiseModel <: AbstractNoiseModel
     "Integration time `[s]`" 
-    integration_time::Unitful.Time
+    t_int::Unitful.Time
     "Detector pixel size (assuming quadratic) `[μm]`"
     detector_size::Unitful.Length
     "Detector quantum efficiency"
-    FPA_qe
-    "grating efficiency"
-    grating_efficiency
-    "effective Transmission of the optics (Telescope and other optical elements)"
-    effTransmission
+    Qₑ
+    "Efficiency of the optical bench (Telescope, grating and other optical elements)"
+    η
     "F-number"
     Fnumber
-    "Spectral Sampling Interval SSI `[μm]`"
-    SSI::Unitful.Length
-    "Readout noise `[e⁻¹]`"
-    readNoise
-    "Dark current `[e⁻¹/s]`"
+    "Spectral Sampling Interval SSI or Δλ `[μm]`"
+    Δλ::Unitful.Length
+    "Readout noise `[e⁻]`"
+    σ_read
+    "Dark current `[e⁻/s]`"
     dark_current::PerTime
     # "Slit width `[μm]`"
     # slit_width::Unitful.Length
 end;
 
-function createGratingNoiseModel(ET, DS, FPA_qe, grating_efficiency, effTransmission, fnumber, SSI, RN, DC) 
+function createGratingNoiseModel(ET, DS, FPA_qe, effTransmission, fnumber, SSI, RN, DC) 
     # @info "Creating instrument model"
     GratingNoiseModel(
        uconvert(u"s",ET),
        uconvert(u"μm",DS),
-       FPA_qe, grating_efficiency, effTransmission,
+       FPA_qe, effTransmission,
        fnumber,
        uconvert(u"μm",SSI),
        RN,
@@ -109,15 +107,14 @@ function Base.show(io::IO, m::GratingNoiseModel)
 
     if !compact
         println("Instance of GratingNoiseModel:")
-        println("Integration time       = ", m.integration_time)
-        println("Detector size          = ", m.detector_size)
-        println("FPA Quantum efficiency = ", m.FPA_qe)
-        println("Grating efficiency     = ", m.grating_efficiency)
-        println("Effective Transmission = ", m.effTransmission)
-        println("F-number               = ", m.FPA_qe)
-        println("Spectral Sampling      = ", m.SSI)
-        println("Readout noise          = ", m.readNoise)
-        println("Dark_current           = ", m.dark_current)
+        println("Integration time         = ", m.t_int)
+        println("Detector size            = ", m.detector_size)
+        println("FPA Quantum efficiency   = ", m.Qₑ)
+        println("Optical bench efficiency = ", m.η)
+        println("F-number                 = ", m.Fnumber)
+        println("Spectral Sampling        = ", m.Δλ)
+        println("Readout noise            = ", m.σ_read)
+        println("Dark_current             = ", m.dark_current)
     else
         show(io, "Instance of GratingNoiseModel")
     end
