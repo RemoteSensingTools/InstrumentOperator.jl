@@ -35,3 +35,12 @@ function noise_equivalent_radiance(ins, λ, radiance)
     return radiance./SNR
 end
 
+function noise_components(ins, λ, radiance)
+    @unpack t_int, dark_current, σ_read = ins
+    photons  = photons_at_fpa(ins, λ, radiance)
+    σ_shot           = sqrt.(photons)
+    σ_shot_dark      = sqrt.(photons .+ dark_current .* t_int)
+    σ_shot_dark_read = sqrt.(photons .+ dark_current .* t_int .+ σ_read^2)
+    return [σ_shot σ_shot_dark σ_shot_dark_read]
+end
+
