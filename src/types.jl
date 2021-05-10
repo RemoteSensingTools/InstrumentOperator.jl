@@ -54,3 +54,68 @@ struct FTSInstrument{FT} <: AbstractInstrument
     "Assymmetry parameter"
     β::FT
 end
+
+"""
+    type AbstractNoiseModel
+Abstract AbstractNoiseModel type 
+"""
+abstract type AbstractNoiseModel end
+
+"""
+    struct GratingNoiseModel{FT}
+
+A struct which stores important variable to compute the noise of a grating spectrometer
+
+# Fields
+$(DocStringExtensions.FIELDS)
+"""
+Base.@kwdef  struct GratingNoiseModel <: AbstractNoiseModel
+    "Integration time `[s]`" 
+    t_int::Unitful.Time
+    "Detector pixel size (assuming quadratic) `[μm]`"
+    detector_size::Unitful.Length
+    "Detector quantum efficiency"
+    Qₑ
+    "Efficiency of the optical bench (Telescope, grating and other optical elements)"
+    η
+    "F-number"
+    Fnumber
+    "Spectral Sampling Interval SSI or Δλ `[μm]`"
+    Δλ::Unitful.Length
+    "Readout noise `[e⁻]`"
+    σ_read
+    "Dark current `[e⁻/s]`"
+    dark_current::PerTime
+    # "Slit width `[μm]`"
+    # slit_width::Unitful.Length
+end;
+
+function createGratingNoiseModel(ET, DS, FPA_qe, effTransmission, fnumber, SSI, RN, DC) 
+    # @info "Creating instrument model"
+    GratingNoiseModel(
+       uconvert(u"s",ET),
+       uconvert(u"μm",DS),
+       FPA_qe, effTransmission,
+       fnumber,
+       uconvert(u"μm",SSI),
+       RN,
+       uconvert(u"s^-1",DC))
+end
+
+function Base.show(io::IO, m::GratingNoiseModel)
+    compact = get(io, :compact, false)
+
+    if !compact
+        println("Instance of GratingNoiseModel:")
+        println("Integration time         = ", m.t_int)
+        println("Detector size            = ", m.detector_size)
+        println("FPA Quantum efficiency   = ", m.Qₑ)
+        println("Optical bench efficiency = ", m.η)
+        println("F-number                 = ", m.Fnumber)
+        println("Spectral Sampling        = ", m.Δλ)
+        println("Readout noise            = ", m.σ_read)
+        println("Dark_current             = ", m.dark_current)
+    else
+        show(io, "Instance of GratingNoiseModel")
+    end
+end
