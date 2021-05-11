@@ -6,6 +6,7 @@ using Pkg
 Pkg.add(url="https://github.com/RadiativeTransfer/RadiativeTransfer.jl")
 
 push!(LOAD_PATH,"./src/")
+ENV["GKSwstype"] = "nul"
 
 function build()
 
