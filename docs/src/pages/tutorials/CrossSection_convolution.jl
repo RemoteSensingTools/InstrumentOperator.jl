@@ -2,9 +2,9 @@
 
 # ###  Using packages:
 using Plots
-using Absorption
+using RadiativeTransfer.Absorption
 using InstrumentOperator
-using Architectures
+using RadiativeTransfer.Architectures
 
 # ## Load HITRAN data and CO2 cross sections
 hitran_data = read_hitran(artifact("CO2"), mol=2, iso=1, ν_min=6000, ν_max=6400)
