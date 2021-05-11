@@ -2,15 +2,19 @@
 EditURL = "<unknown>/docs/src/pages/tutorials/CrossSection_convolution.jl"
 ```
 
-# Instrument Operator: Instrument Line Shapes
+# Instrument Line Shapes
 
-###  Using packages:
+Using packages:
 
 ```@example CrossSection_convolution
 using Plots
-using Absorption
+```
+
+This needs to be installed from https://github.com/RadiativeTransfer/RadiativeTransfer.jl
+
+```@example CrossSection_convolution
+using RadiativeTransfer.Absorption
 using InstrumentOperator
-using Architectures
 ```
 
 ## Load HITRAN data and CO2 cross sections
@@ -28,7 +32,7 @@ line_co2 = make_hitran_model(hitran_data, Voigt(), architecture=CPU())
 nothing #hide
 ```
 
-CO2 cross section at 800hPa and 296K:
+CO₂ cross section at 800hPa and 296K:
 
 ```@example CrossSection_convolution
 σ_co2   = absorption_cross_section(line_co2, ν, 800.0, 296.0);
@@ -42,16 +46,17 @@ T = exp.(-8e21*σ_co2);
 nothing #hide
 ```
 
-### plot high resolution transmission
+plot high resolution transmission
 
 ```@example CrossSection_convolution
 plot(ν, T, lw=2, label="High resolution")
 ```
 
-## Define the instrument kernel grid
+Define the instrument kernel grid
 
 ```@example CrossSection_convolution
-x = -8:Δν:8
+x = -8:Δν:8;
+nothing #hide
 ```
 
 ## Create a kernel at a center wavenumber of 6300cm⁻¹
@@ -70,7 +75,7 @@ T_conv = conv_spectra(FTS_instr, ν, T);
 nothing #hide
 ```
 
-### overplot convolved transmission:
+overplot convolved transmission:
 
 ```@example CrossSection_convolution
 plot!(FTS_instr.ν_out, T_conv, label="Convolved")
