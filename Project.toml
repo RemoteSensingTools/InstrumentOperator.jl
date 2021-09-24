@@ -16,3 +16,6 @@ Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulEquivalences = "da9c4bc3-91c8-4f02-8a40-6b990d2a7e0c"
 UnitfulRecipes = "42071c24-d89e-48dd-8a24-8a12d9b8861f"
+
+[compat]
+Interpolations = "0.13"
