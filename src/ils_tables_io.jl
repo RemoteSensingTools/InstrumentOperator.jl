@@ -23,7 +23,7 @@ function getNC_var(fin, path)
         loc = split(path, r"/")
         # println(loc)
         if length(loc) == 1
-            return fin[path].var[:]
+            return fin[path].var
         elseif length(loc) > 1
             gr = []
             for i in 1:length(loc) - 1
@@ -33,7 +33,7 @@ function getNC_var(fin, path)
                     gr = gr.group[loc[i]]
                 end
             end
-            return gr[loc[end]].var[:]
+            return gr[loc[end]].var
         end
     catch e
         @error e

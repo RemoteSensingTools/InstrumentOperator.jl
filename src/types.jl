@@ -119,3 +119,16 @@ function Base.show(io::IO, m::GratingNoiseModel)
         show(io, "Instance of GratingNoiseModel")
     end
 end
+
+"""
+    type AbstractL1File
+Abstract AbstractL1File type 
+"""
+abstract type AbstractL1File end
+struct L1_OCO <: AbstractL1File
+    geometry::Dict{String, Any}()
+    ils::Dict{String, Any}()
+    meteo::Dict{String, Any}()
+    measurement::Dict{String, Any}()
+end;
+
