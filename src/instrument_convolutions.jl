@@ -17,9 +17,9 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     
     # knots where convolution will be applied to
     knots = view(ν, ind)
-    te = LinearInterpolation(m.ν_out, Float32.(m.ind_out))
+    te = LinearInterpolation(m.ν_out, FT.(m.ind_out))
     spec_out = zeros(FT, length(knots));
-    Threads.@threads for i in eachindex(knots)
+    for i in eachindex(knots)
         # Simple first, nearest neighbor ILS
         ind_fraction = round(Int, te(knots[i]));
         kernel = view(m.kernel, :, ind_fraction)
@@ -31,3 +31,5 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     fin = LinearInterpolation(ν[ind], spec_out; extrapolation_bc=Interpolations.Flat())
     return fin(m.ν_out)
 end;
+
+

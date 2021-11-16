@@ -1,3 +1,4 @@
+using InstrumentOperator
 using NCDatasets
 using OrderedCollections
 using YAML
@@ -19,9 +20,9 @@ oco = InstrumentOperator.load_L1(dictOCO2,ocoData, metData);
 # Pick some bands as tuple (or just one)
 bands = (1,2);
 # Indices within that band:
-indices = (1:1016,20:30);
+indices = (1:1016,20:1000);
 # Geo Index (footprint,sounding):
-GeoInd = [5,4000];
+GeoInd = [5,3000];
 
 # Get data for that sounding:
-ν, a, b, p, T, q = InstrumentOperator.getMeasurement(oco, bands, indices, GeoInd)
+oco_sounding = InstrumentOperator.getMeasurement(oco, bands, indices, GeoInd)

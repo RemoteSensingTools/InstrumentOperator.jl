@@ -58,9 +58,15 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
     ind  = indices[1]
     bandIndices = (ind .- ind[1] .+ 1,)
     rad = oco.measurement[band][ind,GeoInd...]
+    FT = typeof(rad[1])
     dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
-    ν = (dispPoly.(indices[1]))
-
+    ν = FT.(dispPoly.(indices[1]))
+    # First ILS
+    # First hard-coded:
+    @show FT, typeof(ν)
+    grid_x = FT(-0.35e-3):FT(0.001*1e-3):FT(0.35e-3)
+    ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
+    oco2_kernels = (VariableKernelInstrument(ils_pixel, ν, collect(ind .-1)),)
     # Concatenate rest (if applicable)
     for i=2:n
         band = oco.measurement["bands"][bands[i]]
@@ -69,7 +75,13 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
         rad = [rad; oco.measurement[band][ind,GeoInd...]]
         extended_dims = [GeoInd[1],bands[i]];
         dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
-        ν = [ν; (dispPoly.(indices[i]))]
+        ν = [ν; FT.(dispPoly.(indices[i]))]
+        # ILS kernels:
+        grid_x = FT(-0.5e-3):FT(0.001*1e-3):FT(0.5e-3)
+        ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
+        @show ind
+        oco2_kernels = (oco2_kernels..., VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)))
+        @show VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)).ν_out
     end
 
     #### Meteo stuff  ###
@@ -83,6 +95,28 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
     vza = oco.geometry["vza"][GeoInd...]
     azi = oco.geometry["azi"][GeoInd...]
 
-    return ν, rad, bandIndices, p_half, T, q
+    # From OCO-2 ATBD Page 53 https://docserver.gesdisc.eosdis.nasa.gov/public/project/OCO/OCO_L1B_ATBD.pdf
+    StokesCoef = [FT(0.5),FT(cosd(2ϕ)/2), FT(sind(2ϕ)/2), FT(0)] 
+
+    return MeasurementOCO(
+        ν,
+        bandIndices,
+        rad,
+        oco.measurement["radiance_o2"].attrib["Units"],
+        "μm",
+        lat,
+        lon,
+        vza,
+        sza,
+        azi,
+        FT((1 + 0.0053024*sind(lat)^2 - 0.0000058*sin(2lat)^2) * 9.780318), # WELMEC formula
+        ϕ,
+        StokesCoef,
+        FT.(p_half),
+        FT.((p_half[1:end-1] + p_half[2:end])/2),
+        T,
+        q,
+        oco2_kernels
+    )
 end
 

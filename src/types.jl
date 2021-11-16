@@ -138,7 +138,7 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     "Wavelength axis"
     SpectralGrid::Array{FT,1}
     "Band ID axis"
-    BandID::Array{Int,1}
+    BandID::Tuple
     "Spectral radiances (concatenated)"
     SpectralMeasurement::Array{FT,1}
     "Radiance Unit"
@@ -162,12 +162,14 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     "Mueller Coefficients"
     mueller::Array{FT,1}
     "Pressure profile half levels"
-    p::Array{FT,1}
+    p_half::Array{FT,1}
+    "Pressure profile half levels"
+    p_full::Array{FT,1}
     "Temperature profile full level"
     T::Array{FT,1}
     "Specific humidity full level"
     q::Array{FT,1}
     "Instrument Line Shape"
-    ils::AbstractInstrumentOperator
+    ils::Tuple
 end;
 
