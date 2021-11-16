@@ -26,7 +26,8 @@ function prepare_ils_table(grid_x::AbstractRange, ils_in::Array{FT}, ils_Δ::Arr
         ils_pixel[ind,i] = interp.(grid_x[ind]);
     end
     # normalize here
-    return OffsetArray(ils_pixel ./ sum(ils_pixel, dims=1), axis_pixel, 1:n_pos)
+    #return OffsetArray(ils_pixel ./ sum(ils_pixel, dims=1), axis_pixel, 1:n_pos)
+    return OffsetArray(ils_pixel * FT(grid_x.step) , axis_pixel, 1:n_pos)
 end
 # This can still derive min/max range automatically, need to double check
 

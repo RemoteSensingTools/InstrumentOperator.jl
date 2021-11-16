@@ -119,3 +119,57 @@ function Base.show(io::IO, m::GratingNoiseModel)
         show(io, "Instance of GratingNoiseModel")
     end
 end
+
+"""
+    type AbstractL1File
+Abstract AbstractL1File type 
+"""
+abstract type AbstractL1File end
+struct L1_OCO <: AbstractL1File
+    geometry::Dict{String, Any}
+    ils::Dict{String, Any}
+    meteo::Dict{String, Any}
+    measurement::Dict{String, Any}
+end;
+
+abstract type AbstractMeasurement end
+
+struct MeasurementOCO{FT} <: AbstractMeasurement
+    "Wavelength axis"
+    SpectralGrid::Array{FT,1}
+    "Band ID axis"
+    BandID::Tuple
+    "Spectral radiances (concatenated)"
+    SpectralMeasurement::Array{FT,1}
+    "Radiance Unit"
+    MeasurementUnit::String
+    "Wavelength unit"
+    GridUnit::String
+    "Latitude [°]"
+    latitude::FT
+    "Longitude [°]"
+    longitude::FT
+    "Viewing Zenith Angle [°]"
+    vza::FT
+    "Solar Zenith Angle [°]"
+    sza::FT
+    "Relative Azimuth Angle [°]"
+    raa::FT
+    "Gravity at surface"
+    g₀::FT
+    "Polarization Angle [°]"
+    ϕ::FT
+    "Mueller Coefficients"
+    mueller::Array{FT,1}
+    "Pressure profile half levels"
+    p_half::Array{FT,1}
+    "Pressure profile half levels"
+    p_full::Array{FT,1}
+    "Temperature profile full level"
+    T::Array{FT,1}
+    "Specific humidity full level"
+    q::Array{FT,1}
+    "Instrument Line Shape"
+    ils::Tuple
+end;
+
