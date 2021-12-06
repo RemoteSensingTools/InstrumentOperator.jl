@@ -64,6 +64,8 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
     # First ILS
     # First hard-coded:
     @show FT, typeof(ν)
+    
+    # Hard coded for now, needs to be changed later:
     grid_x = FT(-0.35e-3):FT(0.001*1e-3):FT(0.35e-3)
     ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
     oco2_kernels = (VariableKernelInstrument(ils_pixel, ν, collect(ind .-1)),)

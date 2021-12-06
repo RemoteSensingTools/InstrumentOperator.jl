@@ -9,6 +9,7 @@ end;
 "Convolves and resamples the input spectrum with a variable kernel (per spectral position)"
 function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     FT = eltype(m.ν_out)
+    FT2 = eltype(spectrum)
     # Define grid where to perform convolution:
     
     # Padding at both sides required:
@@ -18,7 +19,7 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     # knots where convolution will be applied to
     knots = view(ν, ind)
     te = LinearInterpolation(m.ν_out, FT.(m.ind_out))
-    spec_out = zeros(FT, length(knots));
+    spec_out = zeros(FT2, length(knots));
     for i in eachindex(knots)
         # Simple first, nearest neighbor ILS
         ind_fraction = round(Int, te(knots[i]));
