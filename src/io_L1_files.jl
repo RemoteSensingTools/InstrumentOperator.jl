@@ -26,7 +26,7 @@ function load_L1(dict, L1::NCDataset, met::NCDataset)
     return L1_OCO(geometry, ils, meteo, measurement)
 end
 
-function load_L1(dict::OrderedDict, L1::String, met::String)
+function load_L1(dict::String, L1::String, met::String)
     ocoData = Dataset(L1);    
     metData = Dataset(met);
     # Load dictionary:
