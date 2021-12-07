@@ -87,7 +87,7 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
     end
 
     #### Meteo stuff  ###
-    p_half = reverse(oco.meteo["ak"] + oco.meteo["bk"] * oco.meteo["p_surf"][GeoInd...])/100
+    p_half = reverse(oco.meteo["ak"] + oco.meteo["bk"] * oco.meteo["p_surf"][GeoInd...]/100)
     T   =    oco.meteo["T"][:,GeoInd...] 
     q   =    oco.meteo["q"][:,GeoInd...]
     lat = oco.geometry["lat"][GeoInd...]
