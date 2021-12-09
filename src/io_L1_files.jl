@@ -79,7 +79,7 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd)
         dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
         ν = [ν; FT.(dispPoly.(indices[i]))]
         # ILS kernels:
-        grid_x = FT(-0.5e-3):FT(0.001*1e-3):FT(0.5e-3)
+        grid_x = FT(-0.35e-3):FT(0.001*1e-3):FT(0.35e-3)
         ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
         @show ind
         oco2_kernels = (oco2_kernels..., VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)))
