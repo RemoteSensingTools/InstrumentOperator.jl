@@ -13,12 +13,17 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     # Define grid where to perform convolution:
     
     # Padding at both sides required:
+    start = argmin(abs.(ν.-m.ν_out[1]))-1
+    stop  = argmin(abs.(ν.-m.ν_out[end]))+1
+    # @show start, stop
     off = ceil(Int, size(m.kernel, 1) / 2)
-    ind = off:stride:(length(ν) - off)
+    @assert off ≤ start "Start range of model grid too close to output grid (needs buffer) $(off), $(start)"
+    @assert off ≤ length(ν)-stop "Stop range of model grid too close to output grid (needs buffer) $(off), $(length(ν)-stop)"
+    ind = start:stride:stop
     
     # knots where convolution will be applied to
     knots = view(ν, ind)
-    te = LinearInterpolation(m.ν_out, FT.(m.ind_out))
+    te = LinearInterpolation(m.ν_out, FT.(m.ind_out); extrapolation_bc=Interpolations.Flat())
     spec_out = zeros(FT2, length(knots));
     for i in eachindex(knots)
         # Simple first, nearest neighbor ILS
