@@ -48,7 +48,7 @@ function loadEntries!(NC, dict, out_dict, name)
     end
 end
 
-function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kernel_range = 0.35e-3,kernel_step = 0.001*1e-3 )
+function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kernel_range = 0.45e-3,kernel_step = 0.001*1e-3 )
     @assert length(indices) == length(bands) "Length of bands and indices has to be identical"
     n = length(indices)
     # First band:
