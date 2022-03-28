@@ -48,6 +48,12 @@ function loadEntries!(NC, dict, out_dict, name)
     end
 end
 
+function doppler_factor(vᵣ::FT) where FT
+    c = FT(299792458)
+    sqrt((c-vᵣ)/(c+ vᵣ))
+end
+
+
 function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kernel_range = 0.45e-3,kernel_step = 0.001*1e-3 )
     @assert length(indices) == length(bands) "Length of bands and indices has to be identical"
     n = length(indices)
@@ -60,10 +66,12 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     rad = oco.measurement[band][ind,GeoInd...]
     FT = typeof(rad[1])
     dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
-    ν = FT.(dispPoly.(indices[1]))
+    f = doppler_factor(oco.geometry["v_rel"][GeoInd[2]]);
+    # Apply doppler shift (all depends on definitions)
+    ν = FT.(dispPoly.(indices[1])) .* f
     # First ILS
     # First hard-coded:
-    @show FT, typeof(ν)
+    #@show FT, typeof(ν)
     
     # Hard coded for now, needs to be changed later:
     grid_x = FT(-kernel_range):FT(kernel_step):FT(kernel_range)

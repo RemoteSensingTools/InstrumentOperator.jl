@@ -31,6 +31,8 @@ Geometry:
   ϕ:   "SoundingGeometry/sounding_polarization_angle"
   # Time 
   time: "SoundingGeometry/sounding_time_tai93"
+  # Relative velocity for doppler shift
+  v_rel: "FrameGeometry/relative_velocity"
 
 # =================================================================
 # Measurements (band numbers will be defined as ordered here)
