@@ -68,7 +68,8 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
     f = doppler_factor(oco.geometry["v_rel"][GeoInd[2]]);
     # Apply doppler shift (all depends on definitions)
-    ν = FT.(dispPoly.(indices[1])) .* f
+    @info("Doppler Shift factor = $(f)")
+    ν = FT.(dispPoly.(indices[1])) ./ f
     # First ILS
     # First hard-coded:
     #@show FT, typeof(ν)
