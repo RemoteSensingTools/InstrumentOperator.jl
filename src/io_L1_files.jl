@@ -10,6 +10,7 @@ function load_L1(dict, L1::NCDataset, met::NCDataset)
     ils         = Dict{String, Any}()
     meteo       = Dict{String, Any}()
     measurement = Dict{String, Any}()
+    noise       = Dict{String, Any}()
     
     # Reading in Geometries
     loadEntries!(L1, dict, geometry, "Geometry")
@@ -23,7 +24,10 @@ function load_L1(dict, L1::NCDataset, met::NCDataset)
     # Reading in Meausurements
     loadEntries!(L1, dict, ils, "ILS")
 
-    return L1_OCO(geometry, ils, meteo, measurement)
+    # Reading in Noise
+    loadEntries!(L1, dict, noise, "Noise")
+
+    return L1_OCO(geometry, ils, meteo, measurement, noise)
 end
 
 function load_L1(dict::String, L1::String, met::String)
@@ -31,7 +35,7 @@ function load_L1(dict::String, L1::String, met::String)
     metData = Dataset(met);
     # Load dictionary:
     dictOCO2 = YAML.load_file(dict; dicttype=OrderedDict{String,Any});
-
+    @info "Loading L1 data from $(L1) and Met data from $(met), user has to ensure they match the orbits!"
     # Load L1 file (could just use filenames here as well later on)
     return load_L1(dictOCO2,ocoData, metData)
 end
@@ -69,7 +73,7 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     f_doppler = doppler_factor(oco.geometry["v_rel"][GeoInd[2]]);
     # Apply doppler shift (all depends on definitions)
     # @info("Doppler Shift factor = $(f_doppler)")
-    ν = FT.(dispPoly.(indices[1])) 
+    ν = FT.(dispPoly.(indices[1])) ./ f_doppler 
     # First ILS
     # First hard-coded:
     #@show FT, typeof(ν)
@@ -78,15 +82,30 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     grid_x = FT(-kernel_range):FT(kernel_step):FT(kernel_range)
     ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
     oco2_kernels = (VariableKernelInstrument(ils_pixel, ν, collect(ind .-1)),)
+
+    # Noise (see ATBD https://docserver.gesdisc.eosdis.nasa.gov/public/project/OCO/OCO_L1B_ATBD.pdf, page 28):
+    Cphoton      = oco.noise["snr_coef"][1,ind, GeoInd[1],bands[1]]
+    Cbackground  = oco.noise["snr_coef"][2,ind, GeoInd[1],bands[1]]
+    MaxMS        = oco.noise["MaxMS"][bands[1]]
+    σ_rad        = FT.((MaxMS / 100) * sqrt.(abs.(100 .* rad /MaxMS) .* Cphoton.^2 .+ Cbackground.^2))    
     # Concatenate rest (if applicable)
-    for i=2:n
+    for i= 2:n
         band = oco.measurement["bands"][bands[i]]
         ind  = indices[i]
         bandIndices = (bandIndices..., ind .-ind[1] .+ 1 .+ bandIndices[end][end])
-        rad = [rad; oco.measurement[band][ind,GeoInd...]]
+        #@show size(rad), size(σ_rad)
+        rad_ = oco.measurement[band][ind,GeoInd...]
+        rad = [rad; rad_]
+        # Noise:
+        Cphoton      = oco.noise["snr_coef"][1,ind, GeoInd[1],bands[i]]
+        Cbackground  = oco.noise["snr_coef"][2,ind, GeoInd[1],bands[i]]
+        MaxMS        = oco.noise["MaxMS"][bands[i]]
+        #@show typeof(Cphoton), typeof(MaxMS)
+        σ_rad        = [σ_rad; FT.((MaxMS / 100) * sqrt.(abs.(100 .* rad_ /MaxMS) .* Cphoton.^2 .+ Cbackground.^2))];
+
         extended_dims = [GeoInd[1],bands[i]];
         dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
-        ν = [ν; FT.(dispPoly.(indices[i]))]
+        ν = [ν; FT.(dispPoly.(indices[i])) ./f_doppler ]
         # ILS kernels:
         # grid_x = FT(-0.35e-3):FT(0.001*1e-3):FT(0.35e-3)
         ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
@@ -94,6 +113,9 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
         oco2_kernels = (oco2_kernels..., VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)))
         #@show VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)).ν_out
     end
+
+    # Noise Calculations:
+
 
     #### Meteo stuff  ###
     p_half = reverse(oco.meteo["ak"] + oco.meteo["bk"] * oco.meteo["p_surf"][GeoInd...]/100)
@@ -113,6 +135,7 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
         ν,
         bandIndices,
         rad,
+        σ_rad,
         oco.measurement["radiance_o2"].attrib["Units"],
         "μm",
         lat,

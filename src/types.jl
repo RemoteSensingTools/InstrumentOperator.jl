@@ -130,6 +130,7 @@ struct L1_OCO <: AbstractL1File
     ils::Dict{String, Any}
     meteo::Dict{String, Any}
     measurement::Dict{String, Any}
+    noise::Dict{String, Any}
 end;
 
 abstract type AbstractMeasurement end
@@ -141,6 +142,8 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     BandID::Tuple
     "Spectral radiances (concatenated)"
     SpectralMeasurement::Array{FT,1}
+    "1-σ noise equivalent radiance (concatenated)"
+    SpectralNoise::Array{FT,1}
     "Radiance Unit"
     MeasurementUnit::String
     "Wavelength unit"

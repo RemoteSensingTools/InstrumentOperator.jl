@@ -44,6 +44,12 @@ Measurement:
   bands          : ["radiance_o2", "radiance_wco2", "radiance_sco2" ]
 
 # =================================================================
+# Noise model
+# =================================================================
+Noise:
+  snr_coef     : "InstrumentHeader/snr_coef"
+  MaxMS        : "InstrumentHeader/measureable_signal_max_observed"
+# =================================================================
 # Meteorology (if defined as a file per L1 file)
 # =================================================================
 Meteorology:
