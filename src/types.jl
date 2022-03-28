@@ -171,5 +171,7 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     q::Array{FT,1}
     "Instrument Line Shape"
     ils::Tuple
+    "Doppler shift factor"
+    doppler::FT
 end;
 

@@ -66,10 +66,10 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     rad = oco.measurement[band][ind,GeoInd...]
     FT = typeof(rad[1])
     dispPoly = Polynomial(view(oco.ils["dispersion"], :, extended_dims...))
-    f = doppler_factor(oco.geometry["v_rel"][GeoInd[2]]);
+    f_doppler = doppler_factor(oco.geometry["v_rel"][GeoInd[2]]);
     # Apply doppler shift (all depends on definitions)
-    @info("Doppler Shift factor = $(f)")
-    ν = FT.(dispPoly.(indices[1])) ./ f
+    # @info("Doppler Shift factor = $(f_doppler)")
+    ν = FT.(dispPoly.(indices[1])) 
     # First ILS
     # First hard-coded:
     #@show FT, typeof(ν)
@@ -90,9 +90,9 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
         # ILS kernels:
         # grid_x = FT(-0.35e-3):FT(0.001*1e-3):FT(0.35e-3)
         ils_pixel   = prepare_ils_table(grid_x, oco.ils["ils_response"][:], oco.ils["ils_grid"][:],extended_dims)
-        @show ind
+        #@show ind
         oco2_kernels = (oco2_kernels..., VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)))
-        @show VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)).ν_out
+        #@show VariableKernelInstrument(ils_pixel, FT.(dispPoly.(indices[i])), collect(ind .-1)).ν_out
     end
 
     #### Meteo stuff  ###
@@ -127,7 +127,8 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
         FT.((p_half[1:end-1] + p_half[2:end])/2),
         T,
         q,
-        oco2_kernels
+        oco2_kernels,
+        f_doppler
     )
 end
 
