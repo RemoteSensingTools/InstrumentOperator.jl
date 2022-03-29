@@ -156,8 +156,10 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     vza::FT
     "Solar Zenith Angle [°]"
     sza::FT
-    "Relative Azimuth Angle [°]"
-    raa::FT
+    "Solar Azimuth Angle [°]"
+    saa::FT
+    "Viewing Azimuth Angle [°]"
+    vaa::FT
     "Gravity at surface"
     g₀::FT
     "Polarization Angle [°]"

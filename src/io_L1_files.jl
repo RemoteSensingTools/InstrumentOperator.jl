@@ -126,7 +126,8 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
     sza = oco.geometry["sza"][GeoInd...]
     ϕ   = oco.geometry["ϕ"][GeoInd...]
     vza = oco.geometry["vza"][GeoInd...]
-    azi = oco.geometry["azi"][GeoInd...]
+    saa = oco.geometry["saa"][GeoInd...]
+    vaa = oco.geometry["vaa"][GeoInd...]
 
     # From OCO-2 ATBD Page 53 https://docserver.gesdisc.eosdis.nasa.gov/public/project/OCO/OCO_L1B_ATBD.pdf
     StokesCoef = [FT(0.5),FT(cosd(2ϕ)/2), FT(sind(2ϕ)/2), FT(0)] 
@@ -142,7 +143,8 @@ function getMeasurement(oco::L1_OCO, bands::Tuple, indices::Tuple, GeoInd; kerne
         lon,
         vza,
         sza,
-        azi,
+        vaa,
+        saa,
         FT((1 + 0.0053024*sind(lat)^2 - 0.0000058*sin(2lat)^2) * 9.780318), # WELMEC formula
         ϕ,
         StokesCoef,

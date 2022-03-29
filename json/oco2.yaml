@@ -25,8 +25,10 @@ Geometry:
   sza: "SoundingGeometry/sounding_solar_zenith"
   # Viewing Zenith Angle
   vza: "SoundingGeometry/sounding_zenith"
-  # Relative azimuth angle (wrt sun)
-  azi: "SoundingGeometry/sounding_solar_azimuth"
+  # Viewing azimuth angle (wrt North)
+  vaa: "SoundingGeometry/sounding_azimuth"
+  # Solar azimuth angle (wrt North)
+  saa: "SoundingGeometry/sounding_solar_azimuth"
   # Polarizatuion angle
   ϕ:   "SoundingGeometry/sounding_polarization_angle"
   # Time 
