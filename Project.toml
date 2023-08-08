@@ -1,7 +1,7 @@
 name = "InstrumentOperator"
 uuid = "9e589c1b-9e01-4e00-831a-aa39ce86e3ef"
 authors = ["cfranken "]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
