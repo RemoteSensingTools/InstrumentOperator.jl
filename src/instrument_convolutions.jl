@@ -2,7 +2,7 @@
 "Convolves and resamples the input spectrum with a fixed kernel"
 function conv_spectra(m::FixedKernelInstrument, ν, spectrum)
     s = imfilter(spectrum, m.kernel)
-    interp_cubic = CubicSplineInterpolation(ν, s)
+    interp_cubic = cubic_spline_interpolation(spectral_range(ν), s; extrapolation_bc=Interpolations.Flat())
     return interp_cubic(m.ν_out)
 end;
 
@@ -23,7 +23,7 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
     
     # knots where convolution will be applied to
     knots = view(ν, ind)
-    te = LinearInterpolation(m.ν_out, FT.(m.ind_out); extrapolation_bc=Interpolations.Flat())
+    te = linear_interpolation(spectral_range(m.ν_out), FT.(m.ind_out); extrapolation_bc=Interpolations.Flat())
     spec_out = zeros(FT2, length(knots));
     for i in eachindex(knots)
         # Simple first, nearest neighbor ILS
@@ -34,8 +34,9 @@ function conv_spectra(m::VariableKernelInstrument, ν, spectrum; stride=1)
         end
     end
     # Change this later to only perform conv around output grid!
-    fin = LinearInterpolation(ν[ind], spec_out; extrapolation_bc=Interpolations.Flat())
+    fin = linear_interpolation(spectral_range(ν[ind]), spec_out; extrapolation_bc=Interpolations.Flat())
     return fin(m.ν_out)
 end;
 
+spectral_range(ν) = range(first(ν), last(ν); length=length(ν))
 

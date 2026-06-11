@@ -22,7 +22,7 @@ function prepare_ils_table(grid_x::AbstractRange, ils_in::Array{FT}, ils_Δ::Arr
 
     for i = 1:n_pos
         ind = findall(minimum(ils_Δ_[:,i]) .< grid_x .< maximum(ils_Δ_[:,i]));
-        interp = Interpolations.LinearInterpolation(ils_Δ_[:,i], ils[:,i])
+        interp = Interpolations.linear_interpolation(ils_Δ_[:, i], ils[:, i])
         ils_pixel[ind,i] = interp.(grid_x[ind]);
     end
     # normalize here
