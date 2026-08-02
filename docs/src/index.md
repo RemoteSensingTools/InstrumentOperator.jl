@@ -30,4 +30,7 @@ create_instrument_kernel
 conv_spectra
 FixedKernelInstrument
 VariableKernelInstrument
+CompactVariableKernelInstrument
+prepare_compact_ils
+conv_spectra!
 ```

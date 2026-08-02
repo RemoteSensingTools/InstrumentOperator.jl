@@ -43,5 +43,35 @@ avNGkernel = create_instrument_kernel([Normal(0, 1),Uniform(-2.5,2.5)], x)
 ```
 ![AV_ils](https://user-images.githubusercontent.com/10467190/116157489-ec56f780-a6a1-11eb-9048-8b6938fec69f.png)
 
+## Compact exact variable ILS
+
+For a tabulated, detector-dependent ILS on a fixed high-resolution grid, use
+`prepare_compact_ils`. It precomputes normalized trapezoidal quadrature weights
+only at the requested detector centers and stores only each channel's
+contiguous support:
+
+```julia
+instrument = prepare_compact_ils(
+    model_grid,
+    detector_grid,
+    ils_response,
+    ils_delta;
+    half_width=0.000409,
+)
+
+# One spectrum
+detector_radiance = conv_spectra(instrument, model_grid, radiance)
+
+# All forward-model/Jacobian columns in one call
+detector_bases = conv_spectra(instrument, model_grid, high_resolution_bases)
+
+# Allocation-free application into an existing output
+conv_spectra!(detector_bases, instrument, model_grid, high_resolution_bases)
+```
+
+`ils_response` and `ils_delta` have dimensions `(ILS samples, detector
+channels)`. The prepared operator is bound to `model_grid`; applying it with a
+different grid raises an error. A constant spectrum is preserved by
+construction.
 
 

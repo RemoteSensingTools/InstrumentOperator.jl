@@ -46,6 +46,34 @@ struct VariableKernelInstrument{FT,AA} <: AbstractInstrumentOperator
     ind_out::Array{Int,1}
 end;
 
+"""
+    CompactVariableKernelInstrument{FT}
+
+Exact, precomputed application of a spectrally varying tabulated ILS on one
+fixed high-resolution input grid.
+
+Only the contiguous nonzero span of each detector-channel response is stored.
+The weights include trapezoid integration widths and are normalized per output
+channel, so a constant input spectrum is preserved. Use
+[`prepare_compact_ils`](@ref) to construct this type.
+
+# Fields
+$(DocStringExtensions.FIELDS)
+"""
+struct CompactVariableKernelInstrument{FT<:AbstractFloat} <:
+       AbstractInstrumentOperator
+    "Normalized quadrature weights; columns correspond to output channels"
+    weights::Matrix{FT}
+    "First high-resolution input-grid index used by each output channel"
+    first_indices::Vector{Int}
+    "Number of stored weights used by each output channel"
+    lengths::Vector{Int}
+    "Fixed high-resolution input grid for which the weights were prepared"
+    ν_in::Vector{FT}
+    "Detector-channel output grid"
+    ν_out::Vector{FT}
+end
+
 struct FTSInstrument{FT} <: AbstractInstrument
     "Maximum Optical Path Difference (cm)"
     MOPD::FT
@@ -179,4 +207,3 @@ struct MeasurementOCO{FT} <: AbstractMeasurement
     "Doppler shift factor"
     doppler::FT
 end;
-

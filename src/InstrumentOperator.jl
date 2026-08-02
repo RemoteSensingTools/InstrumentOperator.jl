@@ -8,6 +8,7 @@ using Parameters
 using DocStringExtensions
 using Distributions
 using ImageFiltering   # for convolutions
+using LinearAlgebra
 using Unitful
 using OrderedCollections
 using UnitfulEquivalences
@@ -22,6 +23,8 @@ include("instrument_convolutions.jl") # conv using ImageFiltering, can be change
 include("noise_functions.jl")
 include("io_L1_files.jl")
 
-export FixedKernelInstrument, VariableKernelInstrument, FTSInstrument, create_instrument_kernel, conv_spectra   
+export CompactVariableKernelInstrument, FixedKernelInstrument,
+       VariableKernelInstrument, FTSInstrument, create_instrument_kernel,
+       conv_spectra, conv_spectra!, prepare_compact_ils
 
 end
