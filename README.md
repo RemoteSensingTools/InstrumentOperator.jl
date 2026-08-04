@@ -74,4 +74,27 @@ channels)`. The prepared operator is bound to `model_grid`; applying it with a
 different grid raises an error. A constant spectrum is preserved by
 construction.
 
+### GPU batches
+
+The same compact operator can be applied to CUDA arrays. The convolution
+kernels use KernelAbstractions.jl; CUDA.jl is an optional dependency and is
+loaded only when requested:
+
+```julia
+using CUDA
+using InstrumentOperator
+
+gpu_instrument = gpu_operator(instrument)
+gpu_bases = CuArray(high_resolution_bases)
+gpu_detector_bases = conv_spectra(
+    gpu_instrument,
+    gpu_instrument.ν_in,
+    gpu_bases,
+)
+```
+
+For repeated retrieval batches, preallocate the detector array and call
+`conv_spectra!` to avoid allocation. The compact numerical kernels live in the
+package core and are backend-independent; the CUDA extension is responsible
+only for device conversion and dispatch.
 
