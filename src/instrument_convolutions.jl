@@ -150,7 +150,11 @@ function conv_spectra(
     ν::AbstractVector,
     spectrum::AbstractVector{ST},
 ) where {FT,ST}
-    output = Vector{promote_type(FT, ST)}(undef, length(m.ν_out))
+    output = similar(
+        spectrum,
+        promote_type(FT, ST),
+        length(m.ν_out),
+    )
     return conv_spectra!(output, m, ν, spectrum)
 end
 
@@ -159,8 +163,9 @@ function conv_spectra(
     ν::AbstractVector,
     spectra::AbstractMatrix{ST},
 ) where {FT,ST}
-    output = Matrix{promote_type(FT, ST)}(
-        undef,
+    output = similar(
+        spectra,
+        promote_type(FT, ST),
         length(m.ν_out),
         size(spectra, 2),
     )
@@ -168,3 +173,11 @@ function conv_spectra(
 end
 
 spectral_range(ν) = range(first(ν), last(ν); length=length(ν))
+
+"""
+    gpu_operator(instrument::CompactVariableKernelInstrument)
+
+Copy a compact ILS operator to the active GPU. The method is provided by the
+CUDA package extension and becomes available after `using CUDA`.
+"""
+function gpu_operator end

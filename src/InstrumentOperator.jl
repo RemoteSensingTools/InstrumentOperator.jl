@@ -25,6 +25,6 @@ include("io_L1_files.jl")
 
 export CompactVariableKernelInstrument, FixedKernelInstrument,
        VariableKernelInstrument, FTSInstrument, create_instrument_kernel,
-       conv_spectra, conv_spectra!, prepare_compact_ils
+       conv_spectra, conv_spectra!, gpu_operator, prepare_compact_ils
 
 end

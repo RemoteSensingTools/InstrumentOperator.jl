@@ -19,8 +19,15 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulEquivalences = "da9c4bc3-91c8-4f02-8a40-6b990d2a7e0c"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
+[weakdeps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+
+[extensions]
+InstrumentOperatorCUDAExt = "CUDA"
+
 [compat]
 Aqua = "0.8"
+CUDA = "5"
 Distributions = "0.25"
 DocStringExtensions = "0.9"
 ImageFiltering = "0.7"

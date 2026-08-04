@@ -60,18 +60,24 @@ channel, so a constant input spectrum is preserved. Use
 # Fields
 $(DocStringExtensions.FIELDS)
 """
-struct CompactVariableKernelInstrument{FT<:AbstractFloat} <:
+struct CompactVariableKernelInstrument{
+    FT<:AbstractFloat,
+    I<:Integer,
+    W<:AbstractMatrix{FT},
+    V<:AbstractVector{I},
+    G<:AbstractVector{FT},
+} <:
        AbstractInstrumentOperator
     "Normalized quadrature weights; columns correspond to output channels"
-    weights::Matrix{FT}
+    weights::W
     "First high-resolution input-grid index used by each output channel"
-    first_indices::Vector{Int}
+    first_indices::V
     "Number of stored weights used by each output channel"
-    lengths::Vector{Int}
+    lengths::V
     "Fixed high-resolution input grid for which the weights were prepared"
-    ν_in::Vector{FT}
+    ν_in::G
     "Detector-channel output grid"
-    ν_out::Vector{FT}
+    ν_out::G
 end
 
 struct FTSInstrument{FT} <: AbstractInstrument
